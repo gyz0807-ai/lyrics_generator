@@ -78,11 +78,11 @@ class CharGenerator():
                 lstm_dropout_2 = tf.nn.rnn_cell.DropoutWrapper(lstm_2, output_keep_prob=FLAGS.keep_prob)
                 rnn_2 = tf.nn.dynamic_rnn(lstm_dropout_2, rnn_1[0], dtype=tf.float32)
 
-            # with tf.variable_scope('concat'):
-            #     concat_out = tf.concat([txt_embedded, rnn_1[0], rnn_2[0]], axis=2)
+            with tf.variable_scope('concat'):
+                concat_out = tf.concat([txt_embedded, rnn_1[0], rnn_2[0]], axis=2)
 
             with tf.variable_scope('output'):
-                logit_out = tf.layers.dense(rnn_2[0], FLAGS.vocab_size)
+                logit_out = tf.layers.dense(concat_out, FLAGS.vocab_size)
                 self.nn_dict['softmax_out'] = tf.nn.softmax(logit_out)
 
             with tf.variable_scope('loss'):
